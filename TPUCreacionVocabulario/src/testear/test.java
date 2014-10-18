@@ -6,13 +6,15 @@
 
 package testear;
 
+import clases.Archivo;
+
 /**
  *
  * @author a5
  */
 public class test {
     public static void main(String[] args) {
-       Archivo a=new Archivo();
+       Archivo a=new Archivo("test.txt");
        a.leer();
         System.out.println(a.toString());
         //a.leerRegex();

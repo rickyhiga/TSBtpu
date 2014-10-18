@@ -61,7 +61,8 @@ public class DBAbstractModel {
             System.out.println("Error en el cierre de la conexión db -" +ex.toString());
         }
     }
-    protected void executeSingleQuery(){
+    //Deberian ser protected
+    public void executeSingleQuery(){
         this.openConnection();
         
         try {
@@ -72,10 +73,12 @@ public class DBAbstractModel {
             System.out.println("Error al ejecutar SingleQuery - " + ex.toString());
         }
         
-        
         this.closeConnection();
+        System.out.println("SingleQuery ejecutada con éxito");
     }
-    protected ResultSet gerResultsFromQuery(){
+    
+    //protected
+    public ResultSet getResultsFromQuery(){
         this.openConnection();
         rows=null;
         try {
@@ -86,6 +89,9 @@ public class DBAbstractModel {
             System.out.println("Error al ejecutar consulta - "+ex.toString());
         }
         this.closeConnection();
+        System.out.println("Consulta ejecutada con éxito");
         return rows;
     }
+   
+         
 }

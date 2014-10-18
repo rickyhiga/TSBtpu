@@ -13,9 +13,9 @@ import java.util.Iterator;
  *
  * @author user
  */
-public class Contador {
+public class ContadorTest {
     private HashMap<String,Integer> hma, hmb, hmc;
-    public Contador(){
+    public ContadorTest(){
        /*INFORMACIÓN EXTRAIDA DE http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html 
         The HashMap class is roughly equivalent to Hashtable, except that it is unsynchronized and permits nulls.
        Load factor: Higher values decrease the space overhead but increase the lookup cost*/

@@ -17,15 +17,15 @@ import java.util.regex.Pattern;
  *
  * @author user
  */
-public class Archivo {
+public class ArchivoTest {
 
     File f;
-    Contador c;
+    ContadorTest c;
     public static final String EXAMPLE_TEST = "This is my, 489 sma4ll   . '0example string which? I'm going to /use for pattern_matching. \n Nueva linea continuando ejemplo.";
 
-    public Archivo() {
+    public ArchivoTest() {
         f = new File("test.txt");
-        c = new Contador();
+        c = new ContadorTest();
     }
 
     public void leer() {
