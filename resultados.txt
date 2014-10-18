@@ -1,0 +1,9 @@
+a=10
+b9
+c8
+resto abecedario=1
+ab5
+bc4
+ded3
+di4
+dif2
