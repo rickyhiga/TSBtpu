@@ -23,7 +23,7 @@ import testear.*;
  */
 public class Archivo {
     
-    DBAbstractModel db = new DBAbstractModel("C:\\Users\\user\\Documents\\RickyFacu\\2014\\TSB\\TSBtpu\\TPUCreacionVocabulario\\tpu.s3db");
+    DBAbstractModel db = new DBAbstractModel("C:\\Users\\user\\Documents\\RickyFacu\\2014\\TSB\\TSBtpu\\TPUCreacionVocabulario\\prueba.db");
     File f;
     Contador c;
     String nombre;
@@ -72,23 +72,32 @@ public class Archivo {
     }
 
     //NO IRIA
-    private void cargaArchivo() throws SQLException {
+    private void cargaArchivo(){
         ResultSet r, res;
-        this.db.setQuery("SELECT id_archivo AS id FROM Archivo WHERE nombre=('" + nombre + "');");
+        String sql="";
+        sql="SELECT id_archivo AS id FROM Archivo WHERE nombre=('" + nombre + "');";
+        
+        this.db.setQuery(sql);
+        System.out.println(sql);
         r = db.getResultsFromQuery();
-        if (!r.next()) {
-            System.out.println("No existe el archivo " + nombre);
-            this.db.setQuery("INSERT INTO Archivo(nombre) VALUES('" + nombre + "');");
-            db.executeSingleQuery();
-            db.setQuery("SELECT MAX(id_palabra) AS id FROM Palabra;");
-            res = db.getResultsFromQuery();
-            while (res.next()) {
-                this.id = res.getInt("id");
+        try {
+            if (r==null) {
+                System.out.println("No existe el archivo " + nombre);
+                this.db.setQuery("INSERT INTO Archivo(nombre) VALUES('" + nombre + "');");
+                db.executeSingleQuery();
+                db.setQuery("SELECT MAX(id_palabra) AS id FROM Palabra;");
+                res = db.getResultsFromQuery();
+                while (res.next()) {
+                    this.id = res.getInt("id");
+                }
+            }else{
+                while(r.next()){
+                    id=r.getInt("id");
+                }
             }
-        }else{
-            while(r.next()){
-                id=r.getInt("id");
-            }
+        } catch (SQLException ex) {
+           
+            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

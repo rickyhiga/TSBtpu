@@ -19,7 +19,7 @@ import testear.*;
 public class Contador {
 
     private HashMap<String, Integer> hma, hmb, hmc;
-    DBAbstractModel db = new DBAbstractModel("C:\\Users\\user\\Documents\\RickyFacu\\2014\\TSB\\TSBtpu\\TPUCreacionVocabulario\\tpu.s3db");
+    DBAbstractModel db = new DBAbstractModel("prueba.db");
 
     public Contador() {
         /*INFORMACIÓN EXTRAIDA DE http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html 
