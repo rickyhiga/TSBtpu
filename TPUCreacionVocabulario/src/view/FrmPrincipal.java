@@ -3,29 +3,54 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
-import controller.CtrPrincipal;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import db.DBAbstractModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author a5
  */
 public class FrmPrincipal extends javax.swing.JFrame {
-    
+
+    DefaultTableModel modelo;
+
+    TableRowSorter sorter;
+        DBAbstractModel bd = new DBAbstractModel("C:\\xampp\\htdocs\\TSBtpu\\TPUCreacionVocabulario\\tpu.s3db");
+
+
     /**
      * Creates new form FrmPrincipal
      */
-    public FrmPrincipal() {
+    public FrmPrincipal() throws SQLException {
         initComponents();
+        CargarTabla();
+
+    }
+
+    public void CargarTabla() throws SQLException {
+        ResultSet rs;
+        String[] titulos = {"Nombre", "cantidad apariciones"};
+        String[] registros = new String[2];
+        modelo = new DefaultTableModel(null, titulos);
+        String sSQL = "";
         
+        sSQL = "SELECT  P.nombre,PXA.apariciones FROM PalabraXArchivo PXA join Palabra P ON(PXA.id_palabra=P.id_palabra) ORDER BY nombre ";
+        bd.setQuery(sSQL);
+        rs=bd.getResultsFromQuery();
+        
+        while (rs.next()) {
+            registros[0] = rs.getString("nombre");
+            registros[1] = rs.getString("apariciones");            
+            modelo.addRow(registros);
+        }
+        jTable1.setModel(modelo);
     }
 
     /**
@@ -209,11 +234,17 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemCargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargarArchivoActionPerformed
-       
+
     }//GEN-LAST:event_itemCargarArchivoActionPerformed
 
     private void txtBusquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBusquedaKeyPressed
-        
+
+        String text = txtBusqueda.getText();
+//        if (text.length() == 0) {
+//            jTable1.setRowSorter(null);
+//        } else {
+//            jTable1.setRowFilter(RowFilterregexFilter(text, 0));
+//        }
 
     }//GEN-LAST:event_txtBusquedaKeyPressed
 
@@ -231,23 +262,32 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmPrincipal().setVisible(true);
+                try {
+                    new FrmPrincipal().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FrmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
