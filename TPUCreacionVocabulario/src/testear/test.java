@@ -13,8 +13,8 @@ package testear;
 public class test {
     public static void main(String[] args) {
        Archivo a=new Archivo();
-//       a.leer();
-//        System.out.println(a.toString());
-        a.leerRegex();
+       a.leer();
+        System.out.println(a.toString());
+        //a.leerRegex();
     }
 }
