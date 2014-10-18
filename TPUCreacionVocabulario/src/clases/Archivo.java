@@ -22,7 +22,7 @@ import testear.*;
  * @author user
  */
 public class Archivo {
-    
+
     DBAbstractModel db = new DBAbstractModel("C:\\Users\\user\\Documents\\RickyFacu\\2014\\TSB\\TSBtpu\\TPUCreacionVocabulario\\prueba.db");
     File f;
     Contador c;
@@ -72,33 +72,44 @@ public class Archivo {
     }
 
     //NO IRIA
-    private void cargaArchivo(){
+    private void cargaArchivo() throws SQLException {
         ResultSet r, res;
-        String sql="";
-        sql="SELECT id_archivo AS id FROM Archivo WHERE nombre=('" + nombre + "');";
-        
+        String sql = "";
+        sql = "SELECT id_archivo AS id FROM Archivo WHERE nombre=('" + nombre + "');";
+
         this.db.setQuery(sql);
-        System.out.println(sql);
+
         r = db.getResultsFromQuery();
+        //System.out.println("ID="+r.getInt("id"));
         try {
-            if (r==null) {
+            
+            if (r.next()) {
+                System.out.println("Existe archivo "+nombre);
+                
+                //while (r.next()) {
+                    id = r.getInt("id");
+               // }
+                System.out.println("Archivo existe ID=" + id);
+            } else {
                 System.out.println("No existe el archivo " + nombre);
+                db.closeConnection();
                 this.db.setQuery("INSERT INTO Archivo(nombre) VALUES('" + nombre + "');");
+
                 db.executeSingleQuery();
-                db.setQuery("SELECT MAX(id_palabra) AS id FROM Palabra;");
+                db.setQuery("SELECT MAX(id_archivo) AS id FROM Archivo;");
                 res = db.getResultsFromQuery();
                 while (res.next()) {
                     this.id = res.getInt("id");
                 }
-            }else{
-                while(r.next()){
-                    id=r.getInt("id");
-                }
+                System.out.println("Archivo ID="+id);
             }
         } catch (SQLException ex) {
-           
+
             Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            db.closeConnection();
         }
+
     }
 
     public String toString() {

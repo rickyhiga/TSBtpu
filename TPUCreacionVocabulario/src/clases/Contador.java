@@ -13,7 +13,10 @@ import java.util.Iterator;
 import testear.*;
 
 /**
- *
+SELECT p.nombre, a.nombre, pa.apariciones FROM PalabraXArchivo pa
+INNER JOIN  Palabra p ON pa.id_palabra=p.id_palabra
+INNER JOIN Archivo a ON pa.id_archivo=a.id_archivo
+ORDER BY p.nombre;
  * @author user
  */
 public class Contador {
@@ -123,20 +126,31 @@ public class Contador {
             int cant = this.getCantA(clave);
             db.setQuery("SELECT id_palabra AS id FROM Palabra WHERE nombre=UPPER('" + clave + "');");
             r = db.getResultsFromQuery();
-            if (!r.next()) {
+            //System.out.println("R existe="+r.next());
+            if (r.next()==true) {
+                
+                
+                System.out.println("EXISTE LA PALABRA");
+                //while (r.next()) {
+                    idPalabra = r.getInt("id");
+                    System.out.println("Existe la palabra ID="+idPalabra);
+               // }
+                db.closeConnection();
+            }else{
+                db.closeConnection();
                 System.out.println("Palabra no existe, carga nueva");
                 db.setQuery("INSERT INTO Palabra(nombre) VALUES(UPPER('" + clave + "'));");
                 db.executeSingleQuery();
+
                 db.setQuery("SELECT MAX(id_palabra) AS id FROM Palabra;");
                 res = db.getResultsFromQuery();
                 while (res.next()) {
                     idPalabra = res.getInt("id");
                 }
-            } else {
-                while (r.next()) {
-                    idPalabra = r.getInt("id");
-                }
+                System.out.println("No existe la palabra ID="+idPalabra);
+                db.closeConnection();
             }
+
             db.setQuery("SELECT pa.id AS id "
                     + "FROM PalabraXArchivo pa "
                     + "INNER JOIN Archivo a ON pa.id_archivo=a.id_archivo "
@@ -144,19 +158,22 @@ public class Contador {
                     + "WHERE a.nombre='" + archivo + "' AND p.nombre=UPPER('" + clave + "');");
             rs = db.getResultsFromQuery();
             if (!rs.next()) {
+                db.closeConnection();
                 db.setQuery("INSERT INTO PalabraXArchivo(id_palabra, id_archivo, apariciones) VALUES(" + idPalabra + ", " + idArch + ", " + cant + ");");
                 db.executeSingleQuery();
             } else {
-                int idRel=0;
-                while(rs.next()){
-                    idRel=rs.getInt("id");
-                }
+                int idRel = 0;
+                //while (rs.next()) {
+                    idRel = rs.getInt("id");
+                //}
+                db.closeConnection();
                 db.setQuery("UPDATE  PalabraXArchivo "
-                        + "SET apariciones="+cant
-                        + " WHERE id="+idRel+";");
+                        + "SET apariciones=" + cant
+                        + " WHERE id=" + idRel + ";");
                 db.executeSingleQuery();
 
             }
+
         }
         this.db.setQuery("");
     }

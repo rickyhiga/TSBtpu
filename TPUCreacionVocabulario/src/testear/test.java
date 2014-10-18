@@ -16,7 +16,7 @@ public class test {
     public static void main(String[] args) {
        Archivo a=new Archivo("test.txt");
        a.leer();
-        System.out.println(a.toString());
+      //  System.out.println(a.toString());
         //a.leerRegex();
     }
 }
