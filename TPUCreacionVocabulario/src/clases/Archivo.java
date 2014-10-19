@@ -37,7 +37,8 @@ public class Archivo {
         c = new Contador();
     }
 
-    public void leer() {
+       public void leer() {
+        Pattern pattern = Pattern.compile("[ñÑA-Za-záÁéÉíÍóÓúÚ][ñÑa-zA-ZáÁéÉíÍóÓúÚ]+");
         try {
             /*
              a=10
@@ -53,11 +54,19 @@ public class Archivo {
 
             Scanner sc = new Scanner(f);
             while (sc.hasNext()) {
-                String clave = sc.nextLine();
-                c.sumarCantA(clave);
-                c.sumarCantB(clave);
-                c.sumarCantC(clave);
+//                String clave = sc.nextLine();
+                Matcher matcher = pattern.matcher(sc.nextLine());
+                while (matcher.find()) {
+//                    System.out.print("Start index: " + matcher.start());
+//                    System.out.print(" End index: " + matcher.end() + " ");
+                    c.sumarCantA(matcher.group().toLowerCase());
+                  //  System.out.println(matcher.group());
+                }
+//                c.sumarCantA(clave);
+//                c.sumarCantB(clave);
+//                c.sumarCantC(clave);
             }
+            System.out.println("Cantidad de palabras="+c.cant);
             try {
                 this.cargaArchivo();
                 c.cargaDB(nombre, id);
@@ -69,46 +78,44 @@ public class Archivo {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     //NO IRIA
     private void cargaArchivo() throws SQLException {
         ResultSet r, res;
+        int idRes=0;
         String sql = "";
         sql = "SELECT id_archivo AS id FROM Archivo WHERE nombre=('" + nombre + "');";
 
         this.db.setQuery(sql);
-
-        r = db.getResultsFromQuery();
-        //System.out.println("ID="+r.getInt("id"));
-        try {
+        this.db.openConnection();
+        idRes = db.getIntFromQuery();
+        if (idRes!=-1) {
+            System.out.println("Existe archivo " + nombre);
             
-            if (r.next()) {
-                System.out.println("Existe archivo "+nombre);
-                
-                //while (r.next()) {
-                    id = r.getInt("id");
-               // }
-                System.out.println("Archivo existe ID=" + id);
-            } else {
-                System.out.println("No existe el archivo " + nombre);
-                db.closeConnection();
-                this.db.setQuery("INSERT INTO Archivo(nombre) VALUES('" + nombre + "');");
-
-                db.executeSingleQuery();
-                db.setQuery("SELECT MAX(id_archivo) AS id FROM Archivo;");
-                res = db.getResultsFromQuery();
-                while (res.next()) {
-                    this.id = res.getInt("id");
-                }
-                System.out.println("Archivo ID="+id);
+            //while (r.next()) {
+            id = idRes;
+            // }
+            System.out.println("Archivo existe ID=" + id);
+        } else {
+            System.out.println("No existe el archivo " + nombre);
+//                db.closeConnection();
+            this.db.setQuery("INSERT INTO Archivo(nombre) VALUES('" + nombre + "');");
+            
+            db.executeSingleQuery();
+            db.setQuery("SELECT MAX(id_archivo) AS id FROM Archivo LIMIT 1;");
+            idRes = db.getIntFromQuery();
+            if (idRes!=-1) {
+                this.id = idRes;
+            }else{
+                idRes=0;
+                this.id=idRes;
             }
-        } catch (SQLException ex) {
-
-            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            db.closeConnection();
-        }
+            System.out.println("Archivo ID=" + id);
+        }    
+        this.db.closeConnection();
+        
 
     }
 

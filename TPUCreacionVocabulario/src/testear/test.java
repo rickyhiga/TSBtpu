@@ -14,9 +14,9 @@ import clases.Archivo;
  */
 public class test {
     public static void main(String[] args) {
-       Archivo a=new Archivo("test.txt");
+       Archivo a=new Archivo("22975-8.txt");
        a.leer();
-        System.out.println(a.toString());
+        //System.out.println(a.toString());
         //a.leerRegex();
     }
 }

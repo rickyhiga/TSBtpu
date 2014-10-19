@@ -50,7 +50,7 @@ public class DBAbstractModel {
                 + "[apariciones] INTEGER  NULL "
                 + ");";
         this.setQuery(st);
-        this.executeSingleQuery();
+        this.executeTable();
     }
 //NO DEBERIA ESTAR ACA ESTO
 
@@ -64,7 +64,8 @@ public class DBAbstractModel {
         query.append(sql);
     }
 
-    private void openConnection() {
+    public void openConnection() {
+       
         try {
             Class.forName(dbType.toString());
             //System.out.println(dbPath.toString());
@@ -79,8 +80,9 @@ public class DBAbstractModel {
 
     public void closeConnection() {
         try {
-            this.stmt.close();
             this.con.commit();
+            this.stmt.close();
+            
             this.con.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBAbstractModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,40 +92,97 @@ public class DBAbstractModel {
     }
 
     //Deberian ser protected
-    
-    public void executeSingleQuery() {
-        this.openConnection();
-        System.out.println(query.toString());
+    public void executeTable() {
+        try {
+            Class.forName(dbType.toString());
+            //System.out.println(dbPath.toString());
+            con = DriverManager.getConnection(dbPath.toString());
+            con.setAutoCommit(true);
+            //System.out.println("DB abierta con éxito");
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Error al abrir DB - " + e.toString());
+            System.exit(0);
+        }
+        //System.out.println(query.toString());
         try {
             this.stmt = this.con.createStatement();
             this.stmt.executeUpdate(query.toString());
-            System.out.println("SingleQuery ejecutada con éxito");
+          //  System.out.println("SingleQuery ejecutada con éxito");
         } catch (SQLException ex) {
 
             System.out.println("Error al ejecutar SingleQuery - " + ex.toString());
             System.exit(0);
         }
 
-        this.closeConnection();
+       try {
+            this.stmt.close();
+            
+            this.con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAbstractModel.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error en el cierre de la conexión db -" + ex.toString());
+            System.exit(0);
+        }
+
+    }
+    public void executeSingleQuery() {
+        //this.openConnection();
+        //System.out.println(query.toString());
+        try {
+            this.stmt = this.con.createStatement();
+            this.stmt.executeUpdate(query.toString());
+          //  System.out.println("SingleQuery ejecutada con éxito");
+        } catch (SQLException ex) {
+
+            System.out.println("Error al ejecutar SingleQuery - " + ex.toString());
+            //System.exit(0);
+        }
+
+       // this.closeConnection();
 
     }
 
     //protected
     public ResultSet getResultsFromQuery() {
-        this.openConnection();
-        System.out.println(query.toString());
-        rows = null;
+        //this.openConnection();
+        //System.out.println(query.toString());
+        ResultSet rows = null;
         try {
             stmt = this.con.createStatement();
             rows = stmt.executeQuery(query.toString());
-            System.out.println("Consulta ejecutada con éxito");
+           // System.out.println("Consulta ejecutada con éxito");
         } catch (SQLException ex) {
             System.exit(0);
-            System.out.println("Error al ejecutar consulta - " + ex.toString());
+           // System.out.println("Error al ejecutar consulta - " + ex.toString());
         }
        // this.closeConnection();
 
         return rows;
+    }
+    public int getIntFromQuery() {
+        //this.openConnection();
+        //System.out.println(query.toString());
+        int i = -1;
+        try {
+            stmt = this.con.createStatement();
+            rows = stmt.executeQuery(query.toString());
+           // System.out.println("Consulta ejecutada con éxito");
+        } catch (SQLException ex) {
+            System.exit(0);
+            
+           // System.out.println("Error al ejecutar consulta - " + ex.toString());
+        }
+        try {
+            if(rows.next()){
+                i=rows.getInt(1);
+            }
+        } catch (SQLException ex) {
+            
+        }
+        
+       // this.closeConnection();
+
+        return i;
     }
 
          
