@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import view.FrmPrincipal;
@@ -24,13 +22,9 @@ public class CtrPrincipal implements ActionListener {
     private File file;
     private FrmPrincipal j;
     
-    public CtrPrincipal(){
-        try {
-            j=new FrmPrincipal();
-            j.show();
-        } catch (SQLException ex) {
-            Logger.getLogger(CtrPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public CtrPrincipal() throws SQLException{
+        j=new FrmPrincipal();
+        j.show();
     }
     private void itemCargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {                                                  
        windowSelect();
