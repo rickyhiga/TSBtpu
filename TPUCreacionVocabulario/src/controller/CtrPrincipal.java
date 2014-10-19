@@ -8,6 +8,7 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.SQLException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import view.FrmPrincipal;
@@ -21,7 +22,7 @@ public class CtrPrincipal implements ActionListener {
     private File file;
     private FrmPrincipal j;
     
-    public CtrPrincipal(){
+    public CtrPrincipal() throws SQLException{
         j=new FrmPrincipal();
         j.show();
     }

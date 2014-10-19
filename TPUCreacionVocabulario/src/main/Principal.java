@@ -7,13 +7,14 @@
 package main;
 
 import controller.CtrPrincipal;
+import java.sql.SQLException;
 
 /**
  *
  * @author a5
  */
 public class Principal {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         CtrPrincipal cp=new CtrPrincipal();
         
     }

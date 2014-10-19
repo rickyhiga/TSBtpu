@@ -6,12 +6,22 @@
 package view;
 
 import db.DBAbstractModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.KeyCode;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
 
 /**
  *
@@ -21,36 +31,63 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     DefaultTableModel modelo;
 
-    TableRowSorter sorter;
-        DBAbstractModel bd = new DBAbstractModel("C:\\xampp\\htdocs\\TSBtpu\\TPUCreacionVocabulario\\tpu.s3db");
-
+    DBAbstractModel bd = new DBAbstractModel("C:\\xampp\\htdocs\\TSBtpu\\TPUCreacionVocabulario\\prueba.db");
+    TableRowSorter<TableModel> sorter;
 
     /**
      * Creates new form FrmPrincipal
+     *
+     * @throws java.sql.SQLException
      */
     public FrmPrincipal() throws SQLException {
         initComponents();
         CargarTabla();
 
+        txtBusqueda.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                filtrar();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                filtrar();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                filtrar();
+            }
+
+            public void filtrar() {
+
+                String text = txtBusqueda.getText();
+                sorter = new TableRowSorter<TableModel>(modelo);
+                jTable1.setRowSorter(sorter);
+
+                sorter.setRowFilter(RowFilter.regexFilter(text));
+
+            }
+        });
     }
 
     public void CargarTabla() throws SQLException {
         ResultSet rs;
-        String[] titulos = {"Nombre", "cantidad apariciones"};
-        String[] registros = new String[2];
-        modelo = new DefaultTableModel(null, titulos);
-        String sSQL = "";
-        
-        sSQL = "SELECT  P.nombre,PXA.apariciones FROM PalabraXArchivo PXA join Palabra P ON(PXA.id_palabra=P.id_palabra) ORDER BY nombre ";
+
+        modelo = (DefaultTableModel) jTable1.getModel();
+        String sSQL;
+
+        sSQL = "SELECT  P.nombre AS palabra ,PXA.apariciones AS ap FROM PalabraXArchivo PXA join Palabra P ON(PXA.id_palabra=P.id_palabra) ORDER BY palabra; ";
         bd.setQuery(sSQL);
-        rs=bd.getResultsFromQuery();
-        
+        rs = bd.getResultsFromQuery();
         while (rs.next()) {
-            registros[0] = rs.getString("nombre");
-            registros[1] = rs.getString("apariciones");            
-            modelo.addRow(registros);
+
+            String nom = rs.getString("palabra");
+
+            Long apa = rs.getLong("ap");
+
+            Integer i = 1;
+            modelo.addRow(new Object[]{nom, apa, i});
         }
-        jTable1.setModel(modelo);
+        bd.closeConnection();
+
     }
 
     /**
@@ -83,12 +120,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Buscar Palabra:");
-
-        txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtBusquedaKeyPressed(evt);
-            }
-        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
         jLabel2.setText("Fecha:");
@@ -236,17 +267,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void itemCargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargarArchivoActionPerformed
 
     }//GEN-LAST:event_itemCargarArchivoActionPerformed
-
-    private void txtBusquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBusquedaKeyPressed
-
-        String text = txtBusqueda.getText();
-//        if (text.length() == 0) {
-//            jTable1.setRowSorter(null);
-//        } else {
-//            jTable1.setRowFilter(RowFilterregexFilter(text, 0));
-//        }
-
-    }//GEN-LAST:event_txtBusquedaKeyPressed
 
     /**
      * @param args the command line arguments
