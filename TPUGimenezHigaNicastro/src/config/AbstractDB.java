@@ -26,7 +26,8 @@ public abstract class AbstractDB {
         query.setLength(0);
         query.append(sql);
     }
-
+    
+   //SI NO FUERA SQLITE SERIA PRIVATE Y CADA CONSULTA ABRE Y CIERRA CONEXIÓN
     public void openConnection() {
         try {
             Class.forName(dbType.toString());
@@ -65,6 +66,7 @@ public abstract class AbstractDB {
         }
 
     }
+    
 
     protected ResultSet getResultsFromQuery() {
         //System.out.println(query.toString());
@@ -79,8 +81,27 @@ public abstract class AbstractDB {
         }
         return rows;
     }
-
-    protected void executeTable() {
+     protected void crearTablas() {
+        String st = "CREATE TABLE IF NOT EXISTS [Archivo] ( "
+                + "[id_archivo] INTEGER  NOT NULL PRIMARY KEY, "
+                + "[nombre] VARCHAR(45)  UNIQUE NULL "
+                + "); "
+                + " "
+                + "CREATE TABLE IF NOT EXISTS [Palabra] ( "
+                + "[id_palabra] INTEGER  PRIMARY KEY NOT NULL, "
+                + "[nombre] VARCHAR(45)  UNIQUE NOT NULL "
+                + "); "
+                + " "
+                + "CREATE TABLE IF NOT EXISTS [PalabraXArchivo] ( "
+                + "[id] INTEGER  PRIMARY KEY NOT NULL, "
+                + "[id_palabra] INTEGER  NOT NULL, "
+                + "[id_archivo] INTEGER  NOT NULL, "
+                + "[apariciones] INTEGER  NULL "
+                + ");";
+        this.setQuery(st);
+        this.executeTable();
+    }
+    private void executeTable() {
         try {
             Class.forName(dbType.toString());
             //System.out.println(dbPath.toString());
@@ -134,6 +155,9 @@ public abstract class AbstractDB {
             
         }
         return i;
+    }
+    protected void closeResultSet() throws SQLException{
+        this.stmt.close();
     }
 
 

@@ -15,29 +15,9 @@ import config.AbstractDB;
 public class Access extends AbstractDB {
     public Access(String dbFile){
         super.dbPath.append(dbFile);
-        this.crearTablas();
+        super.crearTablas();
     }
-    
-    private void crearTablas() {
-        String st = "CREATE TABLE IF NOT EXISTS [Archivo] ( "
-                + "[id_archivo] INTEGER  NOT NULL PRIMARY KEY, "
-                + "[nombre] VARCHAR(45)  UNIQUE NULL "
-                + "); "
-                + " "
-                + "CREATE TABLE IF NOT EXISTS [Palabra] ( "
-                + "[id_palabra] INTEGER  PRIMARY KEY NOT NULL, "
-                + "[nombre] VARCHAR(45)  UNIQUE NOT NULL "
-                + "); "
-                + " "
-                + "CREATE TABLE IF NOT EXISTS [PalabraXArchivo] ( "
-                + "[id] INTEGER  PRIMARY KEY NOT NULL, "
-                + "[id_palabra] INTEGER  NOT NULL, "
-                + "[id_archivo] INTEGER  NOT NULL, "
-                + "[apariciones] INTEGER  NULL "
-                + ");";
-        super.setQuery(st);
-        super.executeTable();
-    }
+       
     public int getMaxId(String tabla, String clave){
         StringBuilder st= new StringBuilder("");
         st.append("SELECT MAX(");
@@ -83,7 +63,6 @@ public class Access extends AbstractDB {
         st.append(");");
         super.setQuery(st.toString());
         super.executeSingleQuery();
-    }
-   
+    }  
    
 }
