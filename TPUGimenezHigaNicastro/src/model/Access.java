@@ -6,7 +6,13 @@
 
 package model;
 
+import clases.Palabra;
 import config.AbstractDB;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -64,5 +70,30 @@ public class Access extends AbstractDB {
         super.setQuery(st.toString());
         super.executeSingleQuery();
     }  
+    public ArrayList selectGrilla(){
+        System.out.println("SelectGrilla");
+        super.openConnection();
+        ArrayList<Palabra> palabras=new ArrayList<>();
+        try {
+            ResultSet res=null;
+            String sql = "SELECT P.id_palabra AS id, P.nombre AS palabra ,SUM(PXA.apariciones) AS apariciones, COUNT(P.nombre) AS cantArch FROM PalabraXArchivo PXA join Palabra P ON(PXA.id_palabra=P.id_palabra) GROUP BY id ORDER BY palabra; ";
+            super.setQuery(sql);
+            res=super.getResultsFromQuery();
+            while (res.next()) {
+                int id = res.getInt("id");
+                String des = res.getString("palabra");
+                int cant=res.getInt("apariciones");
+                int cantArch=res.getInt("cantArch");
+                Palabra pa=new Palabra(id, des, cant, cantArch);
+                palabras.add(pa);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Access.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error en cargar grilla: "+ex.toString());
+        }
+        super.closeConnection();
+        return palabras;
+        
+    }
    
 }
