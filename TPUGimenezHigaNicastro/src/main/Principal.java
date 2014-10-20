@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package main;
 
 import clases.FileRead;
 
 /**
  *
- * @author user
+ * @author ricky
  */
 public class Principal {
 
@@ -28,27 +24,27 @@ public class Principal {
         duration = (endTime - startTime);
         System.out.println(duration+ "ms");
         
-        startTime = System.currentTimeMillis();
-        f2.readFile();
-        f2.saveCount();
-        endTime = System.currentTimeMillis();
-        duration = (endTime - startTime);
-        System.out.println(duration+"ms");
-        /*Total de palabras 15590*/
-        
-        startTime = System.currentTimeMillis();
-        f3.readFile();
-        f3.saveCount();
-        endTime = System.currentTimeMillis();
-        duration = (endTime - startTime);
-        System.out.println(duration);
-        
-        startTime = System.currentTimeMillis();
-        f4.readFile();
-        f4.saveCount();
-        endTime = System.currentTimeMillis();
-        duration = (endTime - startTime);
-        System.out.println(duration);
+//        startTime = System.currentTimeMillis();
+//        f2.readFile();
+//        f2.saveCount();
+//        endTime = System.currentTimeMillis();
+//        duration = (endTime - startTime);
+//        System.out.println(duration+"ms");
+//        /*Total de palabras 15590*/
+//        
+//        startTime = System.currentTimeMillis();
+//        f3.readFile();
+//        f3.saveCount();
+//        endTime = System.currentTimeMillis();
+//        duration = (endTime - startTime);
+//        System.out.println(duration);
+//        
+//        startTime = System.currentTimeMillis();
+//        f4.readFile();
+//        f4.saveCount();
+//        endTime = System.currentTimeMillis();
+//        duration = (endTime - startTime);
+//        System.out.println(duration);
 
     }
 }
