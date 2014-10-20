@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package clases;
 
 import java.util.HashMap;
@@ -10,7 +6,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author user
+ * @author ricky
  */
 public class TempStore {
 
@@ -35,7 +31,12 @@ public class TempStore {
             return;
         }
         int old = this.getCount(clave);
+        //DESCOMENTAR LA SENTENCIA SEGUN JAVA QUE VERSION DE JAVA TENGAS
+        //Para JAVA 1.8
         hm.replace(clave, old + 1);
+        //Para JAVA 1.7
+        //hm.remove(clave);
+        //hm.put(clave, old+1);
     }
     public int getCount(String clave){
         return hm.get(clave);
