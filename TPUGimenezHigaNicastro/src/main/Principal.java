@@ -30,7 +30,7 @@ public class Principal {
 //        endTime = System.currentTimeMillis();
 //        duration = (endTime - startTime);
 //        System.out.println(duration+"ms");
-//        /*Total de palabras 15590*/
+        /*Total de palabras 15590*/
 //        
 //        startTime = System.currentTimeMillis();
 //        f3.readFile();

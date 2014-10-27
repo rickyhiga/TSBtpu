@@ -69,7 +69,7 @@ public abstract class AbstractDB {
     
 
     protected ResultSet getResultsFromQuery() {
-        //System.out.println(query.toString());
+        System.out.println(query.toString());
         ResultSet rows = null;
         try {
             stmt = this.con.createStatement();
@@ -112,7 +112,7 @@ public abstract class AbstractDB {
             System.out.println("Error al abrir DB - " + e.toString());
             System.exit(0);
         }
-        //System.out.println(query.toString());
+        System.out.println(query.toString());
         try {
             this.stmt = this.con.createStatement();
             this.stmt.executeUpdate(query.toString());

@@ -5,14 +5,17 @@
  */
 package frames;
 
-import model.Access;
+import clases.Palabra;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
+import javax.swing.JFileChooser;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.event.DocumentEvent;
@@ -22,6 +25,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
+import model.Access;
 
 /**
  *
@@ -30,9 +34,10 @@ import javax.swing.text.DefaultStyledDocument;
 public class FrmPrincipal extends javax.swing.JFrame {
 
     DefaultTableModel modelo;
-
-    Access bd= new Access("tpuVocabulario.db");
+    
+    Access a;
     TableRowSorter<TableModel> sorter;
+    File file;
 
     /**
      * Creates new form FrmPrincipal
@@ -41,6 +46,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
      */
     public FrmPrincipal() throws SQLException {
         initComponents();
+        a= new Access("tpuVocabulario.db");
         CargarTabla();
 
         txtBusqueda.getDocument().addDocumentListener(new DocumentListener() {
@@ -62,31 +68,35 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 sorter = new TableRowSorter<TableModel>(modelo);
                 jTable1.setRowSorter(sorter);
 
-                sorter.setRowFilter(RowFilter.regexFilter(text));
+                sorter.setRowFilter(RowFilter.regexFilter("^"+text));
+               
 
             }
         });
+        
     }
 
     public void CargarTabla() throws SQLException {
         ResultSet rs;
-
+        
+        ArrayList<Palabra> palabras= a.selectGrilla();
         modelo = (DefaultTableModel) jTable1.getModel();
         String sSQL;
 
-        sSQL = "SELECT  P.nombre AS palabra ,PXA.apariciones AS ap FROM PalabraXArchivo PXA join Palabra P ON(PXA.id_palabra=P.id_palabra) ORDER BY palabra; ";
+        //sSQL = "SELECT  P.nombre AS palabra ,PXA.apariciones AS ap FROM PalabraXArchivo PXA join Palabra P ON(PXA.id_palabra=P.id_palabra) ORDER BY palabra; ";
         
-        rs = bd.getResultsFromQuery();
-        while (rs.next()) {
+        //rs = bd.getResultsFromQuery();
+        for (int i = 0; i < palabras.size(); i++) {
+            String nom = palabras.get(i).getNombre();
 
-            String nom = rs.getString("palabra");
+            Long apa = palabras.get(i).getCant();
 
-            Long apa = rs.getLong("ap");
-
-            Integer i = 1;
-            modelo.addRow(new Object[]{nom, apa, i});
+            Integer cantArch=palabras.get(i).getCantArch();
+            modelo.addRow(new Object[]{nom, apa, cantArch});
+               
         }
-        bd.closeConnection();
+        
+        //bd.closeConnection();
 
     }
 
@@ -265,7 +275,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemCargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargarArchivoActionPerformed
-
+        JFileChooser fc = new JFileChooser();
+        if (fc.showDialog(this, "Guardar") != JFileChooser.CANCEL_OPTION) {
+            file = fc.getSelectedFile();
+        }
     }//GEN-LAST:event_itemCargarArchivoActionPerformed
 
     /**
